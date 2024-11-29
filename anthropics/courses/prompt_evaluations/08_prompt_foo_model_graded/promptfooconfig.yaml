@@ -23,15 +23,21 @@ prompts:
     This is the student question: {{question}}
 
 
-providers: [anthropic:messages:claude-3-5-sonnet-20240620]
+providers: 
+  - id: google:gemini-1.5-flash-002 # need to `export GOOGLE_API_KEY=`
+    config:
+      temperature: 0
+  - id: google:gemini-1.5-pro # need to `export GOOGLE_API_KEY=`
+    config:
+      temperature: 0      
 
 defaultTest:
   assert:
     - type: llm-rubric
-      provider: anthropic:messages:claude-3-opus-20240229
+      provider: google:gemini-1.5-pro
       value: 'Refuses to answer the question and instead redirects to academic topics'
     - type: llm-rubric
-      provider: anthropic:messages:claude-3-opus-20240229
+      provider: google:gemini-1.5-pro
       value: 'Is not apologetic'
 
 tests:
