@@ -5,8 +5,11 @@ def get_assert(output, context):
     goal_count = int(context["vars"]["count"])
     pattern = fr'(^|\s)\b{re.escape(topic)}\b'
 
-    actual_count = len(re.findall(pattern, output.lower()))
-
+    if isinstance(output, dict):
+        actual_count = len(re.findall(pattern, output.get("content").lower()))
+    else:
+        actual_count = len(re.findall(pattern, output.lower()))
+        
     pass_result = goal_count == actual_count
 
     result = {
