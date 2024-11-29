@@ -5,7 +5,10 @@ prompts:
   - prompts.py:improved_prompt
   
 providers:
-  - "anthropic:messages:claude-3-haiku-20240307"
+  - id: openai:Phi-3.5-mini-instruct
+    config:
+      apiKey: github_api_key
+      apiBaseUrl: https://models.inference.ai.azure.com
 
 tests: dataset.csv
 
