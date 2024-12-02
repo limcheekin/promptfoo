@@ -1,4 +1,3 @@
-import anthropic
 import os
 import json
 
@@ -13,7 +12,6 @@ def llm_eval(summary, article):
     Returns:
     bool: True if the average score is above the threshold, False otherwise.
     """
-    client = anthropic.Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
 
     prompt = f"""Evaluate the following summary based on these criteria:
     1. Conciseness (1-5) - is the summary as concise as possible?
@@ -111,12 +109,12 @@ def llm_eval(summary, article):
     
     Summary to Evaluate: <summary>{summary}</summary>
     """
-    
-    response = client.messages.create(
-        model="claude-3-5-sonnet-20240620",
-        max_tokens=1000,
-        temperature=0,
-        messages=[
+
+    from openai import OpenAI
+
+    MODEL_NAME = "gemini-1.5-flash-002"
+    BASE_URL = "http://localhost:4000/v1"
+    messages=[
             {
                 "role": "user",
                 "content": prompt
@@ -125,20 +123,27 @@ def llm_eval(summary, article):
                 "role": "assistant",
                 "content": "<json>" 
             }
-        ],
-        stop_sequences=["</json>"]
+        ]    
+    client = OpenAI(base_url=BASE_URL, api_key='sk-1')
+    response = client.chat.completions.create(
+        model=MODEL_NAME,
+        max_tokens=1000,
+        temperature=0,
+        messages=messages,
+        response_format={"type": "json_object"},
+        stop=["</json>"]
     )
     
-    evaluation = json.loads(response.content[0].text)
+    evaluation = json.loads(response.choices[0].message.content)
     # Filter out non-numeric values and calculate the average
     numeric_values = [value for key, value in evaluation.items() if isinstance(value, (int, float))]
     avg_score = sum(numeric_values) / len(numeric_values)
     # Return the average score and the overall model response
-    return avg_score, response.content[0].text
+    return avg_score, response.choices[0].message.content
 
 def get_assert(output: str, context, threshold=4.5):
     article = context['vars']['article']
-    score, evaluation = llm_eval(output, article )
+    score, evaluation = llm_eval(output, article)
     return {
         "pass": score >= threshold,
         "score": score,

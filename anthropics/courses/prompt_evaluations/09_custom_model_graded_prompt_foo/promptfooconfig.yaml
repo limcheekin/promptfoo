@@ -6,8 +6,9 @@ prompts:
   - prompts.py:best_summarize
 
 providers:
-  - id: anthropic:messages:claude-3-5-sonnet-20240620
-    label: "3.5 Sonnet"
+  - id: google:gemini-1.5-flash-002 # need to `export GOOGLE_API_KEY=`
+    config:
+      temperature: 0
 
 tests:
   - vars:
