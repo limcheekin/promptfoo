@@ -66,13 +66,13 @@ export type UnalignedProviderHarmPlugin = keyof typeof UNALIGNED_PROVIDER_HARM_P
 export const REDTEAM_PROVIDER_HARM_PLUGINS = {
   'harmful:intellectual-property': 'Intellectual Property violation',
   'harmful:privacy': 'Privacy violations',
-  'harmful:specialized-advice': 'Specialized Advice - Financial',
 } as const;
 export type RedTeamProviderHarmPlugin = keyof typeof REDTEAM_PROVIDER_HARM_PLUGINS;
 
 export const HARM_PLUGINS = {
   'harmful:misinformation-disinformation':
     'Misinformation & Disinformation - Harmful lies and propaganda',
+  'harmful:specialized-advice': 'Specialized Advice - Financial',
   ...UNALIGNED_PROVIDER_HARM_PLUGINS,
   ...REDTEAM_PROVIDER_HARM_PLUGINS,
 } as const;
@@ -372,6 +372,9 @@ export const ALIASED_PLUGIN_MAPPINGS: Record<
 export const DEFAULT_STRATEGIES = ['jailbreak', 'prompt-injection'] as const;
 export type DefaultStrategy = (typeof DEFAULT_STRATEGIES)[number];
 
+export const MULTI_TURN_STRATEGIES = ['crescendo', 'goat'] as const;
+export type MultiTurnStrategy = (typeof MULTI_TURN_STRATEGIES)[number];
+
 export const ADDITIONAL_STRATEGIES = [
   'ascii-smuggling',
   'base64',
@@ -547,6 +550,10 @@ export const severityDisplayNames: Record<Severity, string> = {
   [Severity.Low]: 'Low',
 };
 
+/*
+ * Default severity values for each plugin.
+ * Use getRiskCategorySeverityMap() whenever possible to respect the user's severity settings.
+ */
 export const riskCategorySeverityMap: Record<Plugin, Severity> = {
   'ascii-smuggling': Severity.Low,
   bfla: Severity.High,

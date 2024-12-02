@@ -1,6 +1,5 @@
 import { useEffect } from 'react';
 import { useTelemetry } from '@app/hooks/useTelemetry';
-import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import { Alert } from '@mui/material';
 import Box from '@mui/material/Box';
@@ -9,15 +8,15 @@ import Grid from '@mui/material/Grid';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
+import { alpha } from '@mui/material/styles';
 import { useRedTeamConfig } from '../hooks/useRedTeamConfig';
 import Prompts from './Prompts';
 
 interface PromptsProps {
   onNext: () => void;
-  onBack: () => void;
 }
 
-export default function Purpose({ onNext, onBack }: PromptsProps) {
+export default function Purpose({ onNext }: PromptsProps) {
   const { config, updateApplicationDefinition } = useRedTeamConfig();
   const { recordEvent } = useTelemetry();
 
@@ -32,9 +31,29 @@ export default function Purpose({ onNext, onBack }: PromptsProps) {
       <Typography variant="h4" gutterBottom sx={{ fontWeight: 'bold', mb: 3 }}>
         Application Details
       </Typography>
-      <Alert severity="info">
-        The more information you provide, the better the redteam attacks will be and the more
-        accurate the results.
+      <Alert
+        severity="info"
+        sx={{
+          '& .MuiAlert-icon': {
+            color: 'info.main',
+          },
+          backgroundColor: (theme) =>
+            theme.palette.mode === 'dark'
+              ? alpha(theme.palette.info.main, 0.1)
+              : alpha(theme.palette.info.main, 0.05),
+          border: (theme) =>
+            `1px solid ${
+              theme.palette.mode === 'dark'
+                ? alpha(theme.palette.info.main, 0.3)
+                : alpha(theme.palette.info.main, 0.2)
+            }`,
+          '& .MuiAlert-message': {
+            color: 'text.primary',
+          },
+        }}
+      >
+        The more information you provide, the better the redteam attacks will be. You can leave
+        fields blank if they're not relevant, and you'll be able to revise information later.
       </Alert>
 
       <Box>
@@ -146,22 +165,11 @@ export default function Purpose({ onNext, onBack }: PromptsProps) {
           <Box
             sx={{
               display: 'flex',
-              justifyContent: 'space-between',
+              justifyContent: 'flex-end',
               alignItems: 'center',
               mt: 4,
             }}
           >
-            <Button
-              variant="outlined"
-              startIcon={<KeyboardArrowLeftIcon />}
-              onClick={onBack}
-              sx={{
-                px: 4,
-                py: 1,
-              }}
-            >
-              Back
-            </Button>
             <Button
               variant="contained"
               endIcon={<KeyboardArrowRightIcon />}
