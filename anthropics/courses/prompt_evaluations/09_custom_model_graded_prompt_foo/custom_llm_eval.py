@@ -1,5 +1,6 @@
 import os
 import json
+from openai import OpenAI
 
 def llm_eval(summary, article):
     """
@@ -109,8 +110,6 @@ def llm_eval(summary, article):
     
     Summary to Evaluate: <summary>{summary}</summary>
     """
-
-    from openai import OpenAI
 
     MODEL_NAME = "gemini-1.5-flash-002"
     BASE_URL = "http://localhost:4000/v1"
